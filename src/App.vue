@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <!--        <excel-uploader/>-->
+    <navigation />
     <sample-table />
     <sample-table-using-table />
   </div>
@@ -11,9 +12,11 @@
 
 import SampleTable from "./components/SampleTable";
 import SampleTableUsingTable from "./components/SampleTableUsingTableCell";
+import Navigation from "./components/TheHeaderTabs";
 export default {
   name: "App",
   components: {
+    Navigation,
     SampleTableUsingTable,
     SampleTable
     // ExcelUploader,
