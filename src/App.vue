@@ -1,5 +1,15 @@
 <template>
   <div id="app">
+    <div v-for="(product, index) in showProducts" :key="index">
+      {{ product }}
+    </div>
+    {{ currentPage }} , {{ perPage }}
+    <app-pagination
+      v-model="currentPage"
+      :total-rows="products.length"
+      :per-page="perPage"
+      @change="changePage"
+    />
     <selectable-table
       :data="groups"
       :selected2="selected"
@@ -12,11 +22,15 @@
 
 <script>
 import SelectableTable from "./components/SelectableTable";
+import AppPagination from "./components/AppPagination";
 export default {
   name: "App",
-  components: { SelectableTable },
+  components: { AppPagination, SelectableTable },
   data() {
     return {
+      products: ["product1", "product2", "product3", "product4", "product5"],
+      currentPage: 1,
+      perPage: 2,
       result: 0,
       selected: [],
       groups: [
@@ -53,7 +67,19 @@ export default {
       ]
     };
   },
+  computed: {
+    showProducts() {
+      return this.products.slice(
+        this.currentPage * this.perPage - this.perPage,
+        this.currentPage * this.perPage
+      );
+    }
+  },
   methods: {
+    changePage(page) {
+      this.currentPage = page;
+      console.log("page-changed");
+    },
     onClickCheck(id) {
       console.log(id);
       if (this.selected.some(x => x === id)) {
@@ -63,10 +89,16 @@ export default {
       }
     },
     onSelectAll() {
-      if (this.selected.length === this.groups.map(({ rows }) => rows).flat().length) {
+      if (
+        this.selected.length ===
+        this.groups.map(({ rows }) => rows).flat().length
+      ) {
         this.selected = [];
       } else {
-        this.selected = this.groups.map(({ rows }) => rows).flat().map(({ id }) => id);
+        this.selected = this.groups
+          .map(({ rows }) => rows)
+          .flat()
+          .map(({ id }) => id);
       }
       // this.selected = [];
       // if (!this.selected) {
